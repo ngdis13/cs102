@@ -47,3 +47,77 @@ class Calculator:
         self._check_args(num, value)
         return (value / 100.00) * num
 
+
+
+
+# --- Блок для использования калькулятора в терминале ---
+
+def get_number_input(prompt):
+    "Вспомогательная функция для получения числового ввода от пользователя"
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("Некорректный ввод :( Пожалуйста, введите число.")
+
+if __name__ == "__main__":
+    calc = Calculator()
+    
+    print("Добро пожаловать в мой калькулятор :3")
+    
+    while True:
+        print("\nВыберите операцию:")
+        print("1. Сложение (+)")
+        print("2. Вычитание (-)")
+        print("3. Умножение (*)")
+        print("4. Деление (/)")
+        print("5. Возведение в степень (^)")
+        print("6. Процент от числа (%)")
+        print("7. Выход")
+        
+        choice = input("Введите номер операции (1-7): ")
+        
+        if choice == '7':
+            print("Выход из калькулятора. До новых встреч:)")
+            break
+        
+        try:
+            result = 0
+            if choice == '1':
+                num1 = get_number_input("Введите первое число: ")
+                num2 = get_number_input("Введите второе число: ")
+                result = calc.add_numbers(num1, num2)
+                print(f"Результат: {num1} + {num2} = {result}")
+            elif choice == '2':
+                num1 = get_number_input("Введите первое число: ")
+                num2 = get_number_input("Введите второе число: ")
+                result = calc.diff_numbers(num1, num2)
+                print(f"Результат: {num1} - {num2} = {result}")
+            elif choice == '3':
+                num1 = get_number_input("Введите первое число: ")
+                num2 = get_number_input("Введите второе число: ")
+                result = calc.multiply_numbers(num1, num2)
+                print(f"Результат: {num1} * {num2} = {result}")
+            elif choice == '4':
+                num1 = get_number_input("Введите делимое: ")
+                num2 = get_number_input("Введите делитель: ")
+                result = calc.divide_numbers(num1, num2)
+                print(f"Результат: {num1} / {num2} = {result}")
+            elif choice == '5':
+                num = get_number_input("Введите число (основание): ")
+                power = get_number_input("Введите степень: ")
+                result = calc.raise_to_number(num, power)
+                print(f"Результат: {num} в степени {power} = {result}")
+            elif choice == '6':
+                num = get_number_input("Введите число, от которого нужно найти процент: ")
+                value = get_number_input("Введите процент (например, 10 для 10%): ")
+                result = calc.percentage(num, value)
+                print(f"Результат: {value}% от {num} = {result}")
+            else:
+                print("Некорректный выбор операции. Пожалуйста, попробуйте снова.")
+                continue # Возвращаемся к началу цикла для нового выбора
+            
+        except (ValueError, TypeError) as error:
+            print(f"Ошибка: {error}")
+        except Exception as e:
+            print(f"Произошла непредвиденная ошибка: {error}")
