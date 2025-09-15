@@ -69,6 +69,7 @@ class CalculatorTestCase(unittest.TestCase):
 
     def test_diff_non_numeric_args_raises_type_error(self):
         "Вычитание нечисловых аргументов должно вызывать TypeError"
+        #создание контекста внутри которого ловится исключение TypeError
         with self.assertRaises(TypeError):
             self.calculator.diff_numbers("b", 10)
         with self.assertRaises(TypeError):
