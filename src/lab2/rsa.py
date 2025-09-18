@@ -12,8 +12,13 @@ def is_prime(n: int) -> bool:
     >>> is_prime(8)
     False
     """
-    # PUT YOUR CODE HERE
-    pass
+    if n == 1:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+    
 
 
 def gcd(a: int, b: int) -> int:
@@ -24,8 +29,13 @@ def gcd(a: int, b: int) -> int:
     >>> gcd(3, 7)
     1
     """
-    # PUT YOUR CODE HERE
-    pass
+    if a == 0 or b == 0:
+        return max(a, b)
+    else:
+        if a > b:
+            return gcd(a - b, b)
+        else:
+            return gcd(a, b - a)
 
 
 def multiplicative_inverse(e: int, phi: int) -> int:
@@ -35,8 +45,27 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     >>> multiplicative_inverse(7, 40)
     23
     """
-    # PUT YOUR CODE HERE
-    pass
+    matrix = []
+    check_module = True  # проверка для модуля чисел
+    A = phi
+    B = e
+    while check_module:
+        mod = A % B
+        cells_value = A // B
+        lst = [A, B, mod, cells_value]
+        matrix.append(lst)
+        A = B
+        B = mod
+        if mod == 0:
+            check_module = False
+    reverse_matrix = matrix[::-1]
+    reverse_matrix[0] += [0, 1]
+    for i in range(1, len(reverse_matrix)):
+        x = reverse_matrix[i - 1][-1]
+        y = reverse_matrix[i - 1][-2] - (reverse_matrix[i - 1][-1] * reverse_matrix[i][3])
+        reverse_matrix[i] += [x, y]
+    answer = reverse_matrix[-1][-1] % reverse_matrix[-1][0]
+    return answer
 
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
