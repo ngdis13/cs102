@@ -8,35 +8,38 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     >>> encrypt_vigenere("ATTACKATDAWN", "LEMON")
     'LXFOPVEFRNHR'
     """
+    if not keyword: 
+        raise ValueError('Ключ не может быть пустым')
+    
     lst_plaintect_code = [ord(i) for i in plaintext]
     lst_keyword_code = [
         ord(i.lower()) - ord("a") for i in keyword
     ]  # Приведение ключа к нижнему регистру
+    
     lst_result = []
-    indx_code = 0
+    keyword_index = 0
+    
     for code in lst_plaintect_code:
-        if chr(code) == chr(code).upper():
-            start_indx = ord("A")
-        else:
-            start_indx = ord("a")
         if chr(code).isalpha():
-            if indx_code < len(lst_keyword_code):
-                formula = (code - start_indx + lst_keyword_code[indx_code]) % 26 + start_indx
-                indx_code += 1
+            if chr(code).isupper():
+                start_indx = ord('A')
             else:
-                formula = (code - start_indx + lst_keyword_code[0]) % 26 + start_indx
-                indx_code = 1
+                start_indx = ord('a')
+                
+            shift_value = lst_keyword_code[keyword_index % len(lst_keyword_code)]
+            
+            formula = (code - start_indx + shift_value) % 26 + start_indx
             lst_result.append(formula)
-        else:
-            if indx_code < len(lst_keyword_code):
-                indx_code += 1
-            else:
-                indx_code = 1
-            lst_result.append(code)  # Если это не буква, оставляем символ без изменений
+            keyword_index += 1
+        else: 
+            lst_result.append(code)
+            keyword_index += 1
+    
     string_result = ""
     for code in lst_result:
         string_result += chr(code)
     return string_result
+    
 
 
 def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
@@ -49,29 +52,37 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
     >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
     'ATTACKATDAWN'
     """
-    lst_keyword_code = [
-        ord(i.lower()) - ord("a") for i in keyword
-    ]  # Приведение ключа к нижнему регистру
+    if not keyword:
+        raise ValueError('Ключ не может быть пустым')
+    
+    lst_keyword_code = [ord(char.lower()) - ord("a") for char in keyword ]  
+    
     lst_result = []
-    indx_code = 0
-    for code in ciphertext:
-        if code.isalpha():  # Проверяем, является ли символ буквой
-            if code.isupper():
-                start_indx = ord("A")  # Начало алфавита для заглавных букв
+    keyword_index = 0
+    
+    for cipher_char in ciphertext:
+        if cipher_char.isalpha(): 
+            if cipher_char.isupper():
+                start_indx = ord("A") 
             else:
-                start_indx = ord("a")  # Начало алфавита для строчных букв
-            # Считаем формулу расшифровки
-            shift = lst_keyword_code[indx_code % len(lst_keyword_code)]  # Сдвиг по ключевому слову
-            formula = (
-                ord(code) - start_indx - shift + 26
-            ) % 26 + start_indx  # Применяем формулу сдвига
-            lst_result.append(chr(formula))  # Добавляем расшифрованный символ
-            indx_code += 1  # Переход к следующему символу ключа
+                start_indx = ord("a")  
+                
+            # Получаем текущий сдвиг из ключевого слова, используя оператор % для циклического доступа
+            shift = lst_keyword_code[keyword_index % len(lst_keyword_code)]
+            
+             # Преобразуем текущий зашифрованный символ в его относительную позицию (0-25)
+            cipher_char_relative = ord(cipher_char) - start_indx
+            
+            # Применяем формулу дешифрования: (относительный_зашифрованный - сдвиг_ключа + 26) % 26
+            # +26 гарантирует положительный результат перед %
+            decrypted_relative = (cipher_char_relative - shift + 26) % 26
+            
+            decrypted_code = decrypted_relative + start_indx
+            lst_result.append(chr(decrypted_code))
+            
+            keyword_index += 1
         else:
-            lst_result.append(code)  # Если это не буква, оставляем символ без изменений
-            indx_code += 1
+            lst_result.append(cipher_char)
+            keyword_index += 1
 
-    string_result = ""
-    for i in lst_result:
-        string_result += i
-    return string_result
+    return "".join(lst_result)
