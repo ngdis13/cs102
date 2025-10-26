@@ -4,10 +4,6 @@ from src.lab2.vigenre import encrypt_vigenere
 from src.lab2.vigenre import decrypt_vigenere
 
 class VigenreTestCase(unittest.TestCase):
-    def setUp(self):
-        self.encrypt_vigenere = encrypt_vigenere
-        self.decrypt_vigenere = decrypt_vigenere
-    
     def test_encrypt_positive(self):
         """Проверка стандартной работы функции и с разным регистром"""
         self.assertEqual(self.encrypt_vigenere('lovePython', 'lemon'), 'wshsCjxtca')

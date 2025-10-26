@@ -4,9 +4,6 @@ from src.lab2.caesar import decrypt_caesar
 from src.lab2.caesar import encrypt_caesar
 
 class CaesarTestCase(unittest.TestCase):
-    def setUp(self):
-        self.encrypt_caesar = encrypt_caesar
-        self.decrypt_caesar = decrypt_caesar
         
     def test_encrypt_positive(self):
         """Проверка стандартной работы функции в верхнем регистре"""
