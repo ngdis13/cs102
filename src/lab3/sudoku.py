@@ -1,5 +1,6 @@
 import pathlib
 import typing as tp
+import random
 
 T = tp.TypeVar("T")
 
@@ -152,14 +153,32 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
         grid[row][col] = '.'
     return None # Если невозможно решить пазл
 
-grid = read_sudoku('puzzle1.txt')
-print(solve(grid))
+def check_good_box(group):
+    """Проверяет, содержит ли группа (строка, столбец или блок) уникальные числа от 1 до 9"""
+    all_values = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    group = [val for val in group if val != '.']  # Игнорируем пустые клетки
+    return len(group) == len(set(group)) and all(val in all_values for val in group) 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
-    # TODO: Add doctests with bad puzzles
-    pass
-
+    for row in solution:
+        if not check_good_box(row) or '.' in row:
+            return False
+    for col_indx in range(9):
+        col = [solution[row_indx][col_indx] for row_indx in range(9)]
+        if not check_good_box(col):
+            return False
+    for block_row in range(0, 9, 3):
+        for block_col in range(0, 9, 3):
+            block = [
+                solution[row][col] 
+                for row in range(block_row, block_row + 3)
+                for col in range(block_col, block_col + 3)
+            ]
+            if not check_good_box(block):
+                return False
+    return True
+        
 
 def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     """Генерация судоку заполненного на N элементов
@@ -182,7 +201,28 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     >>> check_solution(solution)
     True
     """
-    pass
+    empty_grid = [['.'] * 9 for _ in range(9)]
+    solved_sudoku = solve(empty_grid)
+    
+    puzzle_grid = [row[:] for row in solved_sudoku]
+    if N >= 81:
+        return puzzle_grid
+    
+    num_to_remove = 81 - N
+    
+    all_coords = [(r, c) for r in range(9) for c in range(9)]
+    
+    random.shuffle(all_coords)
+    
+    removed_count = 0
+    for row, col in all_coords:
+        if removed_count >= num_to_remove:
+            break
+        puzzle_grid[row][col] = '.'
+        removed_count += 1
+        
+    return puzzle_grid
+    
 
 
 if __name__ == "__main__":
@@ -194,3 +234,5 @@ if __name__ == "__main__":
             print(f"Puzzle {fname} can't be solved")
         else:
             display(solution)
+            if check_solution(solution):
+                print('you\'re right')
