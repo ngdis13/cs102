@@ -123,7 +123,7 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     col = set(get_col(grid, pos))
     block = set(get_block(grid, pos))
     res = row | col | block
-    return all_digits - res
+    return all_digits - res 
     
 
 def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
