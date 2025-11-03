@@ -366,6 +366,3 @@ class TestSudoku(unittest.TestCase):
         self.assertTrue(check_solution(solution_81))
         self.assertEqual(grid_81, solution_81)
 
-
-if __name__ == '__main__':
-    unittest.main() # Запускаем все тесты
