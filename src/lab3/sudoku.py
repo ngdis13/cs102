@@ -1,4 +1,6 @@
+import multiprocessing
 import pathlib
+import time
 import typing as tp
 import random
 
@@ -223,7 +225,6 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
         
     return puzzle_grid
     
-
 
 if __name__ == "__main__":
     for fname in ["puzzle1.txt", "puzzle2.txt", "puzzle3.txt"]:
