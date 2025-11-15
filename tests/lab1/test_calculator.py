@@ -1,4 +1,3 @@
-import unittest
 
 from src.lab1.calculator import Calculator
 
@@ -241,3 +240,4 @@ class CalculatorTestCase(unittest.TestCase):
             self.calculator.percentage(100, "xyz")
         with self.assertRaises(TypeError):
             self.calculator.percentage(None, 5)
+
