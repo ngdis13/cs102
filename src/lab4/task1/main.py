@@ -174,8 +174,54 @@ class RecomendationEngine:
         
 class Application:
     """Точка входа - взаимодействие с пользователем"""
-    def run():
-        return True
     
+    MOVIES_FILE = 'films.txt'
+    HISTORY_FILE = 'users_history.txt'
+    
+    def __init__(self):
+        #создаем репозитории
+        self.movie_repo = MovieRepository()
+        self.history_repo = HistoryRepository()
+        
+        #загружаем данные из файлов
+        self.movie_repo.load_from_file(self.MOVIES_FILE)
+        self.history_repo.load_from_file(self.HISTORY_FILE)
+        
+        #создаем рекомендации
+        self.engine = RecomendationEngine(
+            movie_repo=self.movie_repo,
+            history_repo=self.history_repo,
+            similarity_calculator=SimilarityCalculator
+        )
+        
+    def run(self):
+        """Главный запуск приложения"""
+        print("Введите список просмотренных фильмов через запятую (например, 2,4):")
+        
+        user_input = input().strip()
+        
+        if not user_input:
+            print("Пустой ввод - рекомендации невозможны")
+            return True
+        try:
+            movie_ids = [int(x) for x in user_input.split(',')]
+        except ValueError:
+            print("Ошибка: введите числа через запятую")
+            return True
+        
+        user_history = UserHistory(movie_ids)
+        movie = self.engine.recommend_for(user_history)
+        
+        if movie is None:
+            print("Нет рекомендаций")
+        else:
+            print(movie.title)
+        
+        return True
+            
+        
+if __name__ ==  '__main__':
+    app = Application()
+    app.run()
     
     
