@@ -1,29 +1,33 @@
 from typing import List
 
-
 class Respondent:
-    def __init__(self, name: str, age:  int):
+    """Представляет класс одного респондента"""
+    def __init__(self, name: str, age:  int) -> None:
         self.name = name
         self.age = age
         
-    def get_info(self):
-        """Возвращает информацию о пользователе в формате ФИО<возраст>"""
+    def get_info(self) -> str:
+        """Возвращает информацию о пользователе в формате ФИО<возраст>
+
+        Returns:
+            str: информацию о пользователе
+        """
         return f"{self.name}({self.age})"
     
 class AgeGroup:
     """Представляет класс одной возрастной группы"""
-    def __init__(self, lower_bound: int, upper_bound: int):
+    def __init__(self, lower_bound: int, upper_bound: int) -> None:
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
         self.respondents = []
-    def add_respondent(self, respondent: Respondent):
+    def add_respondent(self, respondent: Respondent) -> None:
         """Добавляет респондента в список группы"""
         if self.lower_bound <= respondent.age <= self.upper_bound:
             self.respondents.append(respondent)
-    def sort_respondents(self):
+    def sort_respondents(self) -> None:
         """Сортирует респондентов внутри группы, сначала по возрасту по убыванию, потом по ФИО"""
         self.respondents.sort(key=lambda x: (-x.age, x.name))
-    def get_info(self):
+    def get_info(self) -> str:
         """"Возвращает строку со всеми респондентами возрастной группы
 
         Returns:
@@ -35,7 +39,8 @@ class AgeGroup:
 
 
 class Groups:
-    def __init__(self, boundaries: List[int]):
+    """Пресдтавляет класс для всех возрастных групп"""
+    def __init__(self, boundaries: List[int]) -> None:
         self.age_group = []
         self.create_group(boundaries)
         
@@ -67,31 +72,79 @@ class Groups:
               
               
 class Application:
-    def run(self):
-        print("Введите границы групп через пробел:")
-        boundaries_input = input().strip()
-        boundaries = list(map(int, boundaries_input.split()))
+    """Точка входа в приложение"""
+    def input_boundaries(self) -> List[int]:
+        """Считывание и проверка границ возрастных групп"""
+        while True:
+            print("Введите границы групп через пробел:")
+            boundaries_input = input().strip()
+
+            if not boundaries_input:
+                print("Ошибка: пустой ввод. Попробуйте снова.")
+                continue
+
+            parts = boundaries_input.split()
+
+            # Проверка, что все значения — числа
+            if not all(p.isdigit() for p in parts):
+                print("Ошибка: границы должны быть числами.")
+                continue
+
+            boundaries = [int(x) for x in parts]
+
+            # Проверка сортировки
+            if boundaries != sorted(boundaries):
+                print("Ошибка: границы должны быть в неубывающем порядке.")
+                continue
+
+            return boundaries
         
-        groups = Groups(boundaries)
-        
+    def input_respondents(self) -> List[Respondent]:
+        """Чтение респондентов с валидацией."""
         print("Введите респондентов в формате: ФИО возраст")
         print("Напишите END для завершения списка")
-        
-        respondents = []
+
+        respondents: List[Respondent] = []
+
         while True:
             line = input().strip()
-            
+
             if line.upper() == 'END':
                 break
-            
-            *name_parts, age = line.split()
-            name = " ".join(name_parts)
-            age = int(age)
-            
+
+            parts = line.split()
+
+            # Проверка, что есть ФИО и возраст
+            if len(parts) < 2:
+                print("Ошибка: нужно ввести ФИО и возраст. Пример: Иванов Иван 25")
+                continue
+
+            age_str = parts[-1]
+
+            # Проверка возраста
+            if not age_str.isdigit():
+                print("Ошибка: возраст должен быть числом.")
+                continue
+
+            age = int(age_str)
+
+            if not (0 <= age <= 123):
+                print("Ошибка: возраст должен быть в диапазоне 0–123.")
+                continue
+
+            name = " ".join(parts[:-1])
             respondents.append(Respondent(name, age))
-            
+
+        return respondents
+    
+    def run(self):
+        boundaries = self.input_boundaries()
+        groups = Groups(boundaries)
+
+        respondents = self.input_respondents()
         groups.distribute_respondents(respondents)
-        print("Распределение по группам:")
+
+        print("\nРаспределение по группам:")
         groups.get_groups()
         
         

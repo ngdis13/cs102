@@ -1,5 +1,4 @@
 
-
 class Movie:
     """Описывает фильм"""
     def __init__(self, movie_id: int, title: str):
@@ -44,12 +43,12 @@ class MovieRepository:
         """Возвращает все фильмы"""
         return self.movies
     
-    def get_title(self, movie_id: int) -> str:
+    def get_title(self, movie_id: int) -> str | None:
         """Возвращает название фильма по id"""
         for movie in self.get_all_movies():
             if movie.movie_id == movie_id:
                 return movie.title
-    def get_movie_by_id(self, movie_id):
+    def get_movie_by_id(self, movie_id) -> Movie | None:
         """Возвращает объект фильма по id"""
         for movie in self.get_all_movies():
             if movie.movie_id == movie_id:
