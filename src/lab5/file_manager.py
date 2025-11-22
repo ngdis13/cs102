@@ -39,6 +39,7 @@ class FileManager:
                 
                 res_orders.append(order_obj)
         
+        self.orders = res_orders 
         return res_orders
     
     def validate_orders(self):
