@@ -3,7 +3,7 @@
 import re
 from typing import List, Tuple
 
-from src.lab5.models import Order
+from models import Order
 
 class OrderValidator:
     """Класс для валидации данных"""
