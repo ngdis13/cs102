@@ -2,8 +2,8 @@
 
 from typing import List
 
-from models import Order
-from validators import OrderValidator
+from src.lab5.models import Order
+from src.lab5.validators import OrderValidator
 
 class FileManager:
     """Класс, отвечающий за файловые операции"""

@@ -1,9 +1,9 @@
 #Модуль для обработки заказов
 from typing import List, Tuple
 
-from models import Order
-from validators import OrderValidator
-from file_manager import FileManager
+from src.lab5.models import Order
+from src.lab5.validators import OrderValidator
+from src.lab5.file_manager import FileManager
 
 
 class OrderProcessor:
@@ -18,7 +18,7 @@ class OrderProcessor:
         self.file_manager = file_manager
     
     def load_orders(self, path: str):
-        """Метод для сохранения заказов"""
+        """Метод для сохпранения заказов"""
         self.all_orders = self.file_manager.read_orders_from_file(path)
         
     def validate(self):
@@ -60,19 +60,3 @@ class OrderProcessor:
         self.save_result(valid_output, invalid_output)
         
         
-fm = FileManager()
-validator = OrderValidator()
-
-processor = OrderProcessor(
-    all_orders=[],
-    valid_orders=[],
-    invalid_errors=[],
-    validator=validator,
-    file_manager=fm
-)
-
-processor.process(
-    input_file="orders.txt",
-    valid_output="order_country.txt",
-    invalid_output="non_valid_orders.txt"
-)

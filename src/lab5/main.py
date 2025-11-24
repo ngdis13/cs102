@@ -1,6 +1,6 @@
-from file_manager import FileManager
-from validators import OrderValidator
-from processing import OrderProcessor
+from src.lab5.file_manager import FileManager
+from src.lab5.validators import OrderValidator
+from src.lab5.processing import OrderProcessor
 
 
 def main():
